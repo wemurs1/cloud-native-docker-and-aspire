@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>351681c8-c779-49a5-b2ce-3a80872fa212</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" />    
 
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" >
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
