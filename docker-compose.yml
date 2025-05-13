@@ -10,6 +10,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - SeqAddress=http://seq:5341
       - ConnectionStrings__CarvedRockPostgres=Host=pgdb;Port=5432;Database=carvedrock;Username=postgres;Password=C0nt*inersAreGREAT!;
+      - Auth__Authority=https://carvedrock.identity:8081
     ports:
       - '8080'
       - '8081'
@@ -28,9 +29,25 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - SeqAddress=http://seq:5341
       - CarvedRock__ApiBaseUrl=http://carvedrock.api:8080
+      - Auth__Authority=https://carvedrock.identity:8081
     ports:
       - '8080'
       - '8081'
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/https:/home/app/.aspnet/https:ro
+
+  carvedrockidentity:
+    image: ${DOCKER_REGISTRY-}carvedrockidentity
+    build:
+      context: .
+      dockerfile: CarvedRock.Identity/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - SeqAddress=http://seq:5341
+    ports:
+      - '32081:8081'
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/https:/home/app/.aspnet/https:ro
