@@ -5,6 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "C#: Identity Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-identity",
+            "program": "${workspaceFolder}/CarvedRock.Identity/bin/Debug/net8.0/CarvedRock.Identity.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CarvedRock.Identity",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "Now listening on:\\s+(https?://\\S+)\"?"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
             "name": "API - .NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
