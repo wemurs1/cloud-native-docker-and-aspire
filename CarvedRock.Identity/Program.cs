@@ -11,11 +11,11 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.UseSerilog((ctx, lc) => lc
+    builder.Host.UseSerilog((context, lc) => lc
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
-        .WriteTo.Seq("http://localhost:5341")
+        .WriteTo.Seq(context.Configuration.GetValue<string>("SeqAddress")!)
         .Enrich.FromLogContext()
-        .ReadFrom.Configuration(ctx.Configuration));
+        .ReadFrom.Configuration(context.Configuration));
 
     var app = builder
         .ConfigureServices()
