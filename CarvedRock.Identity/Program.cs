@@ -1,5 +1,4 @@
-﻿using System.Net;
-using CarvedRock.Identity;
+﻿using CarvedRock.Identity;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -12,28 +11,16 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    var useCustomLocalCert = builder.Configuration.GetValue<bool>("UseCustomLocalCert");
-    if (useCustomLocalCert)
-    {
-        builder.WebHost.ConfigureKestrel((context, options) =>
-        {
-            options.Listen(IPAddress.Any, 8091, listenOptions =>
-            {
-                listenOptions.UseHttps("keys/cr-id-local.pfx", "Learning1sGreat!");
-            });
-        });
-    }
-
-    builder.Host.UseSerilog((context, lc) => lc
+    builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
-        .WriteTo.Seq(context.Configuration.GetValue<string>("SeqAddress")!)
+        .WriteTo.Seq("http://localhost:5341")
         .Enrich.FromLogContext()
-        .ReadFrom.Configuration(context.Configuration));
+        .ReadFrom.Configuration(ctx.Configuration));
 
     var app = builder
         .ConfigureServices()
         .ConfigurePipeline();
-
+    
     app.Run();
 }
 catch (Exception ex)

@@ -1,26 +1,14 @@
-{
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",  
   "profiles": {
     "CarvedRock.Api": {
       "commandName": "Project",
+      "dotnetRunMessages": true,
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:7213",            
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7213"
-    },
-    "Container (Dockerfile)": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "environmentVariables": {
-        "ASPNETCORE_HTTPS_PORTS": "8081",
-        "ASPNETCORE_HTTP_PORTS": "8080",
-        "ConnectionStrings__CarvedRockPostgres": "Host=host.docker.internal;Port=5432;Database=carvedrock;Username=postgres;Password=carvedrock;"
-      },
-      "publishAllPorts": true,
-      "useSSL": true
+      }
     }
-  },
-  "$schema": "https://json.schemastore.org/launchsettings.json"
+  }
 }

@@ -1,18 +1,18 @@
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using CarvedRock.Api;
 using CarvedRock.Data;
 using CarvedRock.Domain;
-using CarvedRock.Domain.Mapping;
-using FluentValidation;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+using CarvedRock.Api;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using CarvedRock.Domain.Mapping;
+using FluentValidation;
 
 internal class Program
 {
@@ -28,11 +28,11 @@ internal class Program
         {
             loggerConfig
             .ReadFrom.Configuration(context.Configuration)
-            // .WriteTo.Console()
+            //.WriteTo.Console()
             .Enrich.WithExceptionDetails()
             .Enrich.FromLogContext()
             .Enrich.With<ActivityEnricher>()
-            .WriteTo.Seq(context.Configuration.GetValue<string>("SeqAddress")!);
+            .WriteTo.Seq("http://localhost:5341");
         });
 
         builder.Services.AddProblemDetails(opts => // built-in problem details support

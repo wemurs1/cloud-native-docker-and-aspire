@@ -4,14 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<UserSecretsId>589a690c-1e82-481d-9ac1-6f3e4d6882ce</UserSecretsId>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Content Include="keys/cr-id-local.pfx">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Duende.IdentityServer" />
@@ -19,6 +12,7 @@
 		<PackageReference Include="Serilog.AspNetCore" />
 		<PackageReference Include="Serilog.Sinks.Seq" />
 	</ItemGroup>
+
 
 
 </Project>

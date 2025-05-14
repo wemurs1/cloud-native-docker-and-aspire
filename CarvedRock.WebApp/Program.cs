@@ -21,7 +21,7 @@ public partial class Program {
             .Enrich.WithExceptionDetails()
             .Enrich.FromLogContext()
             .Enrich.With<ActivityEnricher>()
-            .WriteTo.Seq(context.Configuration.GetValue<string>("SeqAddress")!);
+            .WriteTo.Seq("http://localhost:5341");
         });
 
         var authority = builder.Configuration.GetValue<string>("Auth:Authority");
