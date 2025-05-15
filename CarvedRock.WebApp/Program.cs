@@ -11,18 +11,19 @@ public partial class Program {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Logging.ClearProviders();
+        builder.AddServiceDefaults();
+        // builder.Logging.ClearProviders();
 
-        builder.Host.UseSerilog((context, loggerConfig) =>
-        {
-            loggerConfig
-            .ReadFrom.Configuration(context.Configuration)
-            .WriteTo.Console()
-            .Enrich.WithExceptionDetails()
-            .Enrich.FromLogContext()
-            .Enrich.With<ActivityEnricher>()
-            .WriteTo.Seq("http://localhost:5341");
-        });
+        // builder.Host.UseSerilog((context, loggerConfig) =>
+        // {
+        //     loggerConfig
+        //     .ReadFrom.Configuration(context.Configuration)
+        //     .WriteTo.Console()
+        //     .Enrich.WithExceptionDetails()
+        //     .Enrich.FromLogContext()
+        //     .Enrich.With<ActivityEnricher>()
+        //     .WriteTo.Seq("http://localhost:5341");
+        // });
 
         var authority = builder.Configuration.GetValue<string>("Auth:Authority");
 
@@ -55,7 +56,7 @@ public partial class Program {
             options.SaveTokens = true;
         });
         builder.Services.AddHttpContextAccessor();
-        builder.Services.AddHealthChecks();
+        // builder.Services.AddHealthChecks();
 
         builder.Services.AddRazorPages();
         builder.Services.AddHttpClient();
@@ -63,6 +64,7 @@ public partial class Program {
         builder.Services.AddScoped<IEmailSender, EmailService>();
 
         var app = builder.Build();
+        app.MapDefaultEndpoints();
 
         app.UseExceptionHandler("/Error");
 
@@ -73,7 +75,7 @@ public partial class Program {
         app.UseAuthorization();
 
         app.MapRazorPages().RequireAuthorization();
-        app.MapHealthChecks("health").AllowAnonymous();
+        // app.MapHealthChecks("health").AllowAnonymous();
 
         app.Run();
     }

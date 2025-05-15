@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../CarvedRock.Api/CarvedRock.Api.csproj" />
+    <ProjectReference Include="../CarvedRock.Identity/CarvedRock.Identity.csproj" />
+    <ProjectReference Include="../CarvedRock.WebApp/CarvedRock.WebApp.csproj" />
   </ItemGroup>
 
 </Project>

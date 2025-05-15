@@ -1,16 +1,16 @@
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using CarvedRock.Api;
 using CarvedRock.Data;
 using CarvedRock.Domain;
-using CarvedRock.Api;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Serilog;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using CarvedRock.Domain.Mapping;
 using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 internal class Program
 {
@@ -18,8 +18,8 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
-        builder.Services.AddHealthChecks()
-            .AddDbContextCheck<LocalContext>();
+        // builder.Services.AddHealthChecks()
+        //     .AddDbContextCheck<LocalContext>();
 
         // builder.Logging.ClearProviders();
 
@@ -72,9 +72,12 @@ internal class Program
         builder.Services.AddScoped<IProductLogic, ProductLogic>();
 
         // Postgres -----------------------------
-        builder.Services.AddDbContext<LocalContext>(options => options
-            .UseNpgsql(builder.Configuration.GetConnectionString("CarvedRockPostgres"))
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+        // builder.Services.AddDbContext<LocalContext>(options => options
+        //     .UseNpgsql(builder.Configuration.GetConnectionString("CarvedRockPostgres"))
+        //     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+        builder.AddNpgsqlDbContext<LocalContext>(
+            "CarvedRockPostgres",
+            configureDbContextOptions: opts => opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
         // SQL Server ---------------------------
         //builder.Services.AddDbContext<LocalContext>(options => options
@@ -87,6 +90,7 @@ internal class Program
         builder.Services.AddValidatorsFromAssemblyContaining<NewProductValidator>();
 
         var app = builder.Build();
+        app.MapDefaultEndpoints();
         app.UseSerilogRequestLogging(options =>
         {
             options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
@@ -106,9 +110,8 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers().RequireAuthorization();
-        app.MapDefaultEndpoints();
 
-        app.MapHealthChecks("health").AllowAnonymous();
+        // app.MapHealthChecks("health").AllowAnonymous();
 
         app.Run();
 

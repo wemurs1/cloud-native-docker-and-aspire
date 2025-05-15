@@ -4,13 +4,18 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-	</PropertyGroup>
+	  <UserSecretsId>ccd3e189-bd73-4c2e-886d-35a826944bf6</UserSecretsId>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Duende.IdentityServer" />
 
 		<PackageReference Include="Serilog.AspNetCore" />
 		<PackageReference Include="Serilog.Sinks.Seq" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="../CarvedRock-Aspire.ServiceDefaults/CarvedRock-Aspire.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 

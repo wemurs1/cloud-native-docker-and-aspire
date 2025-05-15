@@ -6,6 +6,7 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
+        builder.AddServiceDefaults();
         builder.Services.AddRazorPages();
 
         var isBuilder = builder.Services.AddIdentityServer(options =>
@@ -24,11 +25,11 @@ internal static class HostingExtensions
 
         return builder.Build();
     }
-    
+
     public static WebApplication ConfigurePipeline(this WebApplication app)
-    { 
-        app.UseSerilogRequestLogging();
-    
+    {
+        app.MapDefaultEndpoints();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -38,7 +39,7 @@ internal static class HostingExtensions
         app.UseRouting();
         app.UseIdentityServer();
         app.UseAuthorization();
-        
+
         app.MapRazorPages()
             .RequireAuthorization();
 
