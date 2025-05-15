@@ -6,8 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Serilog;
-using Serilog.Enrichers.Span;
-using Serilog.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -19,21 +17,22 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.AddServiceDefaults();
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<LocalContext>();
 
-        builder.Logging.ClearProviders();
+        // builder.Logging.ClearProviders();
 
-        builder.Host.UseSerilog((context, loggerConfig) =>
-        {
-            loggerConfig
-            .ReadFrom.Configuration(context.Configuration)
-            //.WriteTo.Console()
-            .Enrich.WithExceptionDetails()
-            .Enrich.FromLogContext()
-            .Enrich.With<ActivityEnricher>()
-            .WriteTo.Seq("http://localhost:5341");
-        });
+        // builder.Host.UseSerilog((context, loggerConfig) =>
+        // {
+        //     loggerConfig
+        //     .ReadFrom.Configuration(context.Configuration)
+        //     //.WriteTo.Console()
+        //     .Enrich.WithExceptionDetails()
+        //     .Enrich.FromLogContext()
+        //     .Enrich.With<ActivityEnricher>()
+        //     .WriteTo.Seq("http://localhost:5341");
+        // });
 
         builder.Services.AddProblemDetails(opts => // built-in problem details support
             opts.CustomizeProblemDetails = (ctx) =>
@@ -107,6 +106,7 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers().RequireAuthorization();
+        app.MapDefaultEndpoints();
 
         app.MapHealthChecks("health").AllowAnonymous();
 

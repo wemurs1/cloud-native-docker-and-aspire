@@ -13,8 +13,8 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />    
     <PackageReference Include="Swashbuckle.AspNetCore" />    
 
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" >
+    <!-- <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" /> -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../CarvedRock-Aspire.ServiceDefaults/CarvedRock-Aspire.ServiceDefaults.csproj" />
     <ProjectReference Include="..\CarvedRock.Domain\CarvedRock.Domain.csproj" />
   </ItemGroup>
 
