@@ -8,13 +8,12 @@ public class EmailService : IEmailSender
     private readonly SmtpClient _client;
     public EmailService(IConfiguration config)
     {
-        var port = config.GetValue<int>("CarvedRock:EmailPort");
-        var host = config.GetValue<string>("CarvedRock:EmailHost")!;
-        _client = new() { Port = port, Host = host };
+        var smtpUri = new Uri(config.GetConnectionString("SmtpUri")!);
+        _client = new() { Host = smtpUri.Host, Port = smtpUri.Port };
     }
 
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
-    {       
+    {
         var mailMessage = new MailMessage
         {
             Body = htmlMessage,
@@ -22,7 +21,7 @@ public class EmailService : IEmailSender
             IsBodyHtml = true,
             From = new MailAddress("e-commerce@carvedrock.com", "Carved Rock Shop"),
             To = { email }
-        };        
+        };
         await _client.SendMailAsync(mailMessage);
     }
 }

@@ -9,9 +9,13 @@ var api = builder.AddProject<Projects.CarvedRock_Api>("carvedrock-api")
     .WithEnvironment("Auth__Authority", idEndpoint)
     .WithReference(carvedRockDb).WaitFor(carvedRockDb);
 
+var smtp = builder.AddSmtp4Dev("SmtpUri");
+
 builder.AddProject<Projects.CarvedRock_WebApp>("carvedrock-webapp")
     .WithEnvironment("Auth__Authority", idEndpoint)
-    .WithReference(api);
-    // .WithEnvironment("CarvedRock__ApiBaseUrl", api.GetEndpoint("https"));
+    .WithReference(api)
+    .WithReference(smtp)
+    .WaitFor(api)
+    .WaitFor(smtp);
 
 builder.Build().Run();
