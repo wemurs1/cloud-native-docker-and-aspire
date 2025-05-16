@@ -48,6 +48,11 @@ public static class Extensions
         return builder;
     }
 
+    private static readonly string[] _excludeFromTraces = [
+        "aspnetcore-browser-refresh.js",
+        "browserlink"
+    ];
+
     public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.Logging.AddOpenTelemetry(logging =>
@@ -65,16 +70,28 @@ public static class Extensions
             })
             .WithTracing(tracing =>
             {
-                tracing.AddSource(builder.Environment.ApplicationName)
-                    .AddAspNetCoreInstrumentation(tracing =>
-                        // Exclude health check requests from tracing
-                        tracing.Filter = context =>
-                            !context.Request.Path.StartsWithSegments(HealthEndpointPath)
-                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
-                    )
-                    // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
-                    //.AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation();
+                // tracing.AddSource(builder.Environment.ApplicationName)
+                //     .AddAspNetCoreInstrumentation(tracing =>
+                //         // Exclude health check requests from tracing
+                //         tracing.Filter = context =>
+                //             !context.Request.Path.StartsWithSegments(HealthEndpointPath)
+                //             && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
+                //     )
+                //     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
+                //     //.AddGrpcClientInstrumentation()
+                //     .AddHttpClientInstrumentation();
+                tracing.AddAspNetCoreInstrumentation(options =>
+                {
+                    options.Filter = (httpContext) =>
+                    {
+                        var excludeFromTraces = _excludeFromTraces;
+                        if (excludeFromTraces.Any(ex => httpContext.Request.Path.Value?.Contains(ex) ?? false))
+                        {
+                            return false;
+                        }
+                        return true;
+                    };
+                });
             });
 
         builder.AddOpenTelemetryExporters();
@@ -136,7 +153,7 @@ public static class Extensions
                             [string k, string v] => (k, v),
                             var v => throw new Exception($"Invalid header format {v}")
                         };
-                        options.Headers.Add(key, value); 
+                        options.Headers.Add(key, value);
                     }
                 });
         });

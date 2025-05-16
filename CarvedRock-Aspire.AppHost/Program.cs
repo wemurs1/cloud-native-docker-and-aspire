@@ -11,6 +11,7 @@ var api = builder.AddProject<Projects.CarvedRock_Api>("carvedrock-api")
 
 builder.AddProject<Projects.CarvedRock_WebApp>("carvedrock-webapp")
     .WithEnvironment("Auth__Authority", idEndpoint)
-    .WithEnvironment("CarvedRock__ApiBaseUrl", api.GetEndpoint("https"));
+    .WithReference(api);
+    // .WithEnvironment("CarvedRock__ApiBaseUrl", api.GetEndpoint("https"));
 
 builder.Build().Run();

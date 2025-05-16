@@ -1,9 +1,9 @@
-﻿using CarvedRock.Core;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using CarvedRock.Core;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CarvedRock.WebApp;
 
@@ -20,10 +20,11 @@ public class ProductService : IProductService
 
     private HttpClient Client { get; }
 
-    public ProductService(HttpClient client, IConfiguration config, ILogger<ProductService> logger, 
+    public ProductService(HttpClient client, IConfiguration config, ILogger<ProductService> logger,
         IHttpContextAccessor httpCtxAccessor)
     {
-        client.BaseAddress = new Uri(config.GetValue<string>("CarvedRock:ApiBaseUrl")!);
+        // client.BaseAddress = new Uri(config.GetValue<string>("CarvedRock:ApiBaseUrl")!);
+        client.BaseAddress = new("https://carvedrock-api");
         Client = client;
         _logger = logger;
         _httpCtxAccessor = httpCtxAccessor;
@@ -45,7 +46,7 @@ public class ProductService : IProductService
         if (!response.IsSuccessStatusCode)
         {
             var fullPath = $"{Client.BaseAddress}Product?category={category}";
-           
+
             var content = await response.Content.ReadAsStringAsync();
             var details = JsonSerializer.Deserialize<ProblemDetails>(content) ?? new ProblemDetails();
             var traceId = details.Extensions["traceId"]?.ToString();
@@ -73,7 +74,7 @@ public class ProductService : IProductService
         var response = await Client.PostAsJsonAsync("Product", newProduct);
 
         if (!response.IsSuccessStatusCode)
-        {            
+        {
             var content = await response.Content.ReadAsStringAsync();
             var details = JsonSerializer.Deserialize<ProblemDetails>(content) ?? new ProblemDetails();
 
@@ -83,7 +84,7 @@ public class ProductService : IProductService
                 var ignore = new List<string> { "traceId", "type", "title", "status", "detail", "instance" };
                 foreach (var errorKey in details.Extensions.Keys.Where(k => !ignore.Contains(k)))
                 {
-                    var errorMessages= details.Extensions[errorKey]!.ToString() ?? "";
+                    var errorMessages = details.Extensions[errorKey]!.ToString() ?? "";
                     validationErrors.Add(errorKey, errorMessages);
                 }
                 return validationErrors;
